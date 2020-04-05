@@ -3,12 +3,18 @@ This module contains some helper functions for printing actions and boards.
 Feel free to use and/or modify them to help you develop your program.
 """
 
+import warnings
+
+warnings. simplefilter('always', DeprecationWarning)
+
 
 def print_move(n, x_a, y_a, x_b, y_b, **kwargs):
     """
     Output a move action of n pieces from square (x_a, y_a)
     to square (x_b, y_b), according to the format instructions.
     """
+    warnings.warn('Use Board.move()', DeprecationWarning, stacklevel=2)
+
     print("MOVE {} from {} to {}.".format(n, (x_a, y_a), (x_b, y_b)), **kwargs)
 
 
@@ -17,6 +23,8 @@ def print_boom(x, y, **kwargs):
     Output a boom action initiated at square (x, y) according to
     the format instructions.
     """
+    warnings.warn('Use Board.boom()', DeprecationWarning, stacklevel=2)
+
     print("BOOM at {}.".format((x, y)), **kwargs)
 
 
@@ -160,5 +168,7 @@ def print_board(board_dict, message="", unicode=False, compact=True,
 
     else:
         # print it
+        warnings.warn('Use print(Board())', DeprecationWarning, stacklevel=2)
+
         print(template.format(message, *cells), **kwargs)
         return None

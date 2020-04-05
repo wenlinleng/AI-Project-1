@@ -56,6 +56,10 @@ class Stack:
 
         return True
 
+    def boom(self):
+        self.height = 0
+        self.colour = None
+
     def change_height(self, delta):
         self.height += delta
 

@@ -5,11 +5,13 @@ import handler
 import sys, json
 
 # ------------------- data preparing ----------------------
+# Fraser: remove
 
 # create a dictionary which contains input data
 with open(sys.argv[1]) as file: data = json.load(file)
 
 # ---------------- chess board preparing -------------------
+# Fraser: now handled by Board class - remove
 
 # create white and black token list
 wList = data['white']
@@ -32,6 +34,7 @@ for elem in wList:
     board[x][y] = [[x,y],['white', n]]
 
 # --------- divide the white token at beginning --------------
+# Fraser: moved to search.__main__
 
 # create divided path: in the format of [[1, 5, 3], n, x, y]
 token_divided_path = []
@@ -40,6 +43,7 @@ token_divided_path = []
 handler.divide_token(wList,bList,token_divided_path)
 
 # ------------ find expected explosion point -----------------
+# Fraser: moved to search.__main__
 
 # create list containing all the exploded points
 total_explode_list = []
@@ -55,6 +59,7 @@ frequency_list = handler.get_frequency_list(total_explode_list)
 useful_exploded_coordinator_list = handler.get_useful_exploded_coordinator(frequency_list, bList,wList)
 
 # ---------------------- find path ----------------------------
+# Fraser: moved to search.__main__
 
 # transfer board to string list format
 graph = handler.get_board_string_list(board)
@@ -67,6 +72,7 @@ path_dict = {}
 path_dict = handler.find_all_paths(useful_exploded_coordinator_list, wList, graph)
 
 # ---------------------- print paths ----------------------------
+# Fraser: moved to search.__main__ - needs changing
 
 # print the information about divided token
 for item in token_divided_path:

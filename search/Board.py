@@ -15,7 +15,7 @@ class Board:
     def __repr__(self):
         return super().__repr__() + '\n' + self.__str__()
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> Stack:
         return self.board_dict[item]
 
     def move(self, stack: Stack, moving_stack: Stack):
@@ -33,6 +33,10 @@ class Board:
             destination_stack = self[moving_stack.get_coords()]
         except KeyError:
             raise InvalidMove('Location {} not on board'.format(moving_stack.get_coords()))
+
+        # check moving_stack is same colour
+        if stack.colour != moving_stack.colour:
+            raise InvalidMove('Colours do not match, check the moving stack shares colour with stack')
 
         # check new location is same colour or empty
         if not stack.is_colour_empty(destination_stack):
@@ -55,6 +59,17 @@ class Board:
         stack.change_height(-moving_stack.height)
         destination_stack.colour = moving_stack.colour
         destination_stack.change_height(moving_stack.height)
+
+        print('MOVE {} from {} to {}.'.format(moving_stack.height, stack.get_coords(), moving_stack.get_coords()))
+
+    def boom(self, stack: Stack):
+        stack.boom()
+        print('BOOM at {}.'.format(stack.get_coords()))
+        for x in range(stack.x - 1, stack.x + 2):
+            for y in range(stack.y - 1, stack.y + 2):
+                current_stack = self[(x, y)]
+                if not current_stack.is_empty():
+                    self.boom(current_stack)
 
     @staticmethod
     def load_board_dict(data: dict) -> dict:
