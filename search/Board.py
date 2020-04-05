@@ -67,7 +67,11 @@ class Board:
         print('BOOM at {}.'.format(stack.get_coords()))
         for x in range(stack.x - 1, stack.x + 2):
             for y in range(stack.y - 1, stack.y + 2):
-                current_stack = self[(x, y)]
+                try:
+                    current_stack = self[(x, y)]
+                except KeyError:
+                    # outside of board range, ignore
+                    continue
                 if not current_stack.is_empty():
                     self.boom(current_stack)
 
