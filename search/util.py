@@ -1,3 +1,5 @@
+from search.objects import Stack
+
 """
 This module contains some helper functions for printing actions and boards.
 Feel free to use and/or modify them to help you develop your program.
@@ -150,3 +152,27 @@ def print_board(board_dict, message="", unicode=False, compact=True, **kwargs):
             cells.append(str(board_dict[xy])[:3].center(3))
     # print it
     print(template.format(message, *cells), **kwargs)
+
+
+def load_board(data: dict) -> dict:
+    """
+    :param data: a list (JSON array) of stacks, with each stack represented in
+        the form [n,x,y].
+    :return: A dictionary with (x, y) tuples as keys (x, y in range(8))
+        and printable objects (e.g. strings, numbers) as values.
+
+    """
+
+    # initialising the board
+    board_dict = {}
+    for x in range(8):
+        for y in range(8):
+            board_dict[(x, y)] = ''
+
+    # filling the board
+    for colour in ['white', 'black']:
+        for stack in data[colour]:
+            x, y, n = stack
+            board_dict[(x, y)] = Stack(colour, n)
+
+    return board_dict

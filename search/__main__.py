@@ -10,9 +10,10 @@ def main():
 
     # TODO: find and print winning action sequence
 
-    print(json.dumps(data, indent=4))
+    board_dict = load_board(data)
 
-    # print_board(data)
+    print_board(board_dict, unicode=True, compact=True)
+    print_board(board_dict, unicode=True, compact=False)
 
     print('END')
 
