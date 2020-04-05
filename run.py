@@ -8,4 +8,7 @@ if __name__ == '__main__':
             '',
             'test/test_cases/test-level-{}.json'.format(i)
         ]
+        print('{:.79}'.format('test-level-{}'.format(i) + '-' * 79))
         main()
+        print('-' * 79)
+        print()

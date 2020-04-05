@@ -1,5 +1,3 @@
-from search.objects import Stack
-
 """
 This module contains some helper functions for printing actions and boards.
 Feel free to use and/or modify them to help you develop your program.
@@ -22,27 +20,32 @@ def print_boom(x, y, **kwargs):
     print("BOOM at {}.".format((x, y)), **kwargs)
 
 
-def print_board(board_dict, message="", unicode=False, compact=True, **kwargs):
+def print_board(board_dict, message="", unicode=False, compact=True,
+                return_as_string=False, **kwargs):
     """
     For help with visualisation and debugging: output a board diagram with
     any information you like (tokens, heuristic values, distances, etc.).
 
-    Arguments:
-    board_dict -- A dictionary with (x, y) tuples as keys (x, y in range(8))
+    :param board_dict:
+        A dictionary with (x, y) tuples as keys (x, y in range(8))
         and printable objects (e.g. strings, numbers) as values. This function
         will arrange these printable values on the grid and output the result.
         Note: At most the first 3 characters will be printed from the string
         representation of each value.
-    message -- A printable object (e.g. string, number) that will be placed
+    :param message:
+        A printable object (e.g. string, number) that will be placed
         above the board in the visualisation. Default is "" (no message).
-    unicode -- True if you want to use non-ASCII symbols in the board
+    :param unicode:
+        True if you want to use non-ASCII symbols in the board
         visualisation (see below), False to use only ASCII symbols.
         Default is False, since the unicode symbols may not agree with some
         terminal emulators.
-    compact -- True if you want to use a compact board visualisation, with
+    :param compact:
+        True if you want to use a compact board visualisation, with
         coordinates along the edges of the board, False to use a bigger one
         with coordinates alongside the printable information in each square.
         Default True (small board).
+    :param return_as_string: a flag if the string is to be returned
     
     Any other keyword arguments are passed through to the print function.
     """
@@ -150,29 +153,12 @@ def print_board(board_dict, message="", unicode=False, compact=True, **kwargs):
             cells.append("   ")
         else:
             cells.append(str(board_dict[xy])[:3].center(3))
-    # print it
-    print(template.format(message, *cells), **kwargs)
 
+    if return_as_string:
+        # return the string
+        return template.format(message, *cells)
 
-def load_board(data: dict) -> dict:
-    """
-    :param data: a list (JSON array) of stacks, with each stack represented in
-        the form [n,x,y].
-    :return: A dictionary with (x, y) tuples as keys (x, y in range(8))
-        and printable objects (e.g. strings, numbers) as values.
-
-    """
-
-    # initialising the board
-    board_dict = {}
-    for x in range(8):
-        for y in range(8):
-            board_dict[(x, y)] = ''
-
-    # filling the board
-    for colour in ['white', 'black']:
-        for stack in data[colour]:
-            x, y, n = stack
-            board_dict[(x, y)] = Stack(colour, n)
-
-    return board_dict
+    else:
+        # print it
+        print(template.format(message, *cells), **kwargs)
+        return None

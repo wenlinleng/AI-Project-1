@@ -1,0 +1,86 @@
+from search.Stack import Stack
+from search import util
+
+
+class Board:
+    size = 8
+
+    def __init__(self, data: dict):
+        self.board_dict = self.load_board_dict(data)
+
+    def __str__(self):
+        return util.print_board(self.board_dict, unicode=True, compact=False,
+                                return_as_string=True)
+
+    def __repr__(self):
+        return super().__repr__() + '\n' + self.__str__()
+
+    def __getitem__(self, item):
+        return self.board_dict[item]
+
+    def move(self, stack: Stack, moving_stack: Stack):
+        """
+        :param stack:
+            the stack the tokens are being taken and moved from
+        :param moving_stack:
+            the portion of the stack that is being moved, represented as a
+            separate stack, is agnostic as to what currently occupies the
+            destination.
+        :return:
+        """
+
+        try:
+            destination_stack = self[moving_stack.get_coords()]
+        except KeyError:
+            raise InvalidMove('Location {} not on board'.format(moving_stack.get_coords()))
+
+        # check new location is same colour or empty
+        if not stack.is_colour_empty(destination_stack):
+            raise InvalidMove('{} is currently occupied by the other colour ({})'.format(moving_stack.get_coords(), destination_stack.colour))
+
+        # check moving stack is not higher than original
+        if moving_stack.height > stack.height:
+            raise InvalidMove('Number of tiles being moved ({}) is greater than the stack\'s height ({})'.format(moving_stack.height, stack.height))
+
+        # check new location is straight line from stack
+        if not stack.is_inline_to(moving_stack):
+            raise InvalidMove('{} -> {} is not straight line'.format(stack.get_coords(), moving_stack.get_coords()))
+
+        # distance moving cannot be greater than height of moving stack
+        d = stack.get_distance_to(moving_stack)
+        if d > moving_stack.height:
+            raise InvalidMove('Stack is moving more tiles ({}) than tokens ({}) being moved'.format(d, moving_stack.height))
+
+        # moving the tokens
+        stack.change_height(-moving_stack.height)
+        destination_stack.colour = moving_stack.colour
+        destination_stack.change_height(moving_stack.height)
+
+    @staticmethod
+    def load_board_dict(data: dict) -> dict:
+        """
+        :param data:
+            a list (JSON array) of stacks, with each stack represented
+            in the form [n,x,y].
+        :return:
+            A dictionary with (x, y) tuples as keys (x, y in range(8))
+            and printable objects (e.g. strings, numbers) as values.
+        """
+
+        # initialising the board
+        board_dict = {}
+        for x in range(8):
+            for y in range(8):
+                board_dict[(x, y)] = Stack(x, y)
+
+        # filling the starting board
+        for colour in ['white', 'black']:
+            for stack in data[colour]:
+                x, y, n = stack
+                board_dict[(x, y)] = Stack(x, y, colour, n)
+
+        return board_dict
+
+
+class InvalidMove(Exception):
+    pass

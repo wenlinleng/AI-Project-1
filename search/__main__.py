@@ -1,7 +1,8 @@
 import sys
 import json
 
-from search.util import *
+from search.Board import Board
+from search.Stack import Stack
 
 
 def main():
@@ -10,10 +11,13 @@ def main():
 
     # TODO: find and print winning action sequence
 
-    board_dict = load_board(data)
+    board = Board(data)
 
-    print_board(board_dict, unicode=True, compact=True)
-    print_board(board_dict, unicode=True, compact=False)
+    print(board)
+
+    board.move(board[(1,4)], Stack(3,4,'black',3))
+
+    print(board)
 
     print('END')
 
