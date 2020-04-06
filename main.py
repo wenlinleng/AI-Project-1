@@ -7,6 +7,11 @@ import sys, json
 # ------------------- data preparing ----------------------
 # Fraser: remove
 
+sys.argv = [
+            '',
+            'test/test_cases/test-level-{}.json'.format(1)
+        ]
+
 # create a dictionary which contains input data
 with open(sys.argv[1]) as file: data = json.load(file)
 
@@ -32,6 +37,7 @@ for elem in wList:
     x = elem[2]
     y = elem[1]
     board[x][y] = [[x,y],['white', n]]
+    # board[(x, y)] = Stack(x, y, colour, n)
 
 # --------- divide the white token at beginning --------------
 # Fraser: moved to search.__main__

@@ -54,18 +54,20 @@ def main():
     path_dict = handler.find_all_paths(useful_exploded_coordinator_list, white_list, graph)
 
     # ---------------------- print paths ----------------------------
-    # Fraser: @Wenlin use Board.move() and Board.boom()
 
     # print the information about divided token
     for item in token_divided_path:
+        # TODO board.move()
         print("MOVE ", item[1], "from ", (item[0][1], item[0][2]), "to ", (item[2], item[3]))
 
     # print the information of different path of the white token
     for white_chess in path_dict.keys():
         move_list = path_dict[white_chess]
         for index in range(len(move_list) - 1):
+            # TODO board.move()
             print("MOVE 1 from ", move_list[index], "to ", (move_list[index + 1]))
             if index == len(move_list) - 2:
+                # TODO baord.boom()
                 print("BOOM at ", (move_list[index + 1]))
 
     print('END')
@@ -80,7 +82,13 @@ def temp1():
     print(board)
 
     stack_to_move = board[(1, 4)]
-    moving_stack = Stack(1, 2, 'black', 6)
+    moving_stack = Stack(1, 2, 'black', 3)
+
+    board.move(stack_to_move, moving_stack)
+    print(board)
+
+    moving_stack = Stack(1, 2, 'black', 3)
+
     board.move(stack_to_move, moving_stack)
 
     print(board)
@@ -105,6 +113,6 @@ def temp2():
 if __name__ == '__main__':
     sys.argv = [
         '',
-        'C:/Users/Fraser/PycharmProjects/Uni/AI/AI-Project-1/test/test_cases/test-level-1.json'
+        'C:/Users/Fraser/PycharmProjects/Uni/AI/AI-Project-1/test/test_cases/test-level-4.json'
     ]
     temp1()

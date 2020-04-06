@@ -115,18 +115,23 @@ def divide_token(white_list, black_list, path):
 
 # function: transfer board to string list format
 def get_board_string_list(chess_board):
+    """
+    :param chess_board:
+    :return: dict [(x, y)]:  ['(1, 2)', '(3, 4)']
+    """
     graph = {}
-    for row in range(8):
-        for item in chess_board[row]:
-            x = item[0][0]
-            y = item[0][1]
+
+    for x in range(8):
+        for y in range(8):
             value_list = []
-            for row_2 in range(8):
-                for surrounding_item in chess_board[row_2]:
-                    if (surrounding_item[0] in [[x - 1, y], [x + 1, y], [x, y + 1], [x, y - 1]]) & (
-                            surrounding_item[1][1] == 0):
-                        value_list.append(str(surrounding_item[0]))
-                graph[str(item[0])] = value_list
+            for surrounding_coords in [(x - 1, y), (x + 1, y), (x, y + 1), (x, y - 1)]:
+                try:
+                    stack = chess_board[surrounding_coords]
+                    if stack.is_empty():
+                        value_list.append(str(list(stack.get_coords())))
+                    graph[str(list(stack.get_coords()))] = value_list
+                except KeyError:
+                    continue
     return graph
 
 
