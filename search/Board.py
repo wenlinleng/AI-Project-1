@@ -9,6 +9,8 @@ class Board:
         self.board_dict = self.load_board_dict(data)
 
     def __str__(self):
+        # TODO: could u check your print board function to see it right or not? I think it mix up the three number [n, x, y]
+        #  in the form of input file, although I'm not sure.
         return util.print_board(self.board_dict, unicode=True, compact=False,
                                 return_as_string=True)
 
@@ -74,6 +76,39 @@ class Board:
                     continue
                 if not current_stack.is_empty():
                     self.boom(current_stack)
+
+    def boom_without_print(self, stack: Stack):
+        # TODO: I add this function which is almost the same with the above one, and it is used in the
+        #  get_boom_points(total_explode_list, white_list, board: Board) function in Handler file.
+        stack.boom()
+        for x in range(stack.x - 1, stack.x + 2):
+            for y in range(stack.y - 1, stack.y + 2):
+                try:
+                    current_stack = self[(x, y)]
+                except KeyError:
+                    # outside of board range, ignore
+                    continue
+                if not current_stack.is_empty():
+                    self.boom(current_stack)
+
+    # check board is empty or not
+    # def __getitem__(self, item) -> Stack:
+    #     return self.board_dict[item]
+    def is_empty(self):
+        # TODO: could u check if this function is right? I debug for a long time and not sure if wrong things happened there.
+        n = 0
+        for i in self.board_dict:
+            stack = self.__getitem__(i)
+            # print("Stack: ",stack)
+            if stack.height == 0:
+                n += 1;
+                # print("n: ",n)
+                continue
+            else:
+                break
+        if n == len(self.board_dict):
+            return True
+        return False
 
     @staticmethod
     def load_board_dict(data: dict) -> dict:

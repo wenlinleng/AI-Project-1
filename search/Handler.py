@@ -1,3 +1,8 @@
+from search.Board import Board
+from search.Stack import Stack
+import itertools
+import copy
+
 # function: print board
 def print_board(board):
     for i in range(8):
@@ -13,22 +18,61 @@ def get_explode_coordinators(coordinator):
         x = coordinator[0] - 1  # 0
         y = coordinator[1] - 1 + i - 1  # 0
         for j in range(3):  # 1,2,3
-            explode_coordinator = [x, y]
-            if (coordinator != explode_coordinator):
-                explode_coordinators.append(explode_coordinator)
+            if (x >= 0 & y <= 7):
+                explode_coordinator = [x, y]
+                if (coordinator != explode_coordinator):
+                    explode_coordinators.append(explode_coordinator)
             x += 1
     return explode_coordinators
 
 
-# function: find the coordinator of the explode point by processing the black list
+# function: find the coordinators of the explode points by processing the black list
 def get_all_explode_coordinators(black_list):
     total_explode_list = []
     for i in black_list:
         coordinator = [i[1], i[2]]
         explode_coordinators = get_explode_coordinators(coordinator)
+        # print("explode_coordinators: ", explode_coordinators)
         for j in explode_coordinators:
             total_explode_list.append(j)
     return total_explode_list
+
+# loop total_explode_list[0:len(white_list)]：for 'only one point boom', for 'only two chesses boom' ...... return the
+# first list that make board to empty
+def get_boom_points(total_explode_list, white_list, board: Board):
+
+    # TODO: I tested the cases and found it can't pass the extreme case such as one white with many blacks, so I write this one
+    #  which will work usually, but there is something wrong and I'm not sure whether it is about the is_empty() function
+    #  in Board class or sth wrong with the function, if you have time, could u have a look?
+
+    print(board.__str__())
+
+    # create the list of variable length array
+    explode_combinations = []
+    for i in range(1, len(white_list) + 1):
+        iter = itertools.combinations(total_explode_list, i)
+        explode_combinations.append(list(iter))
+
+    # wipe out white chess
+    test_board = copy.deepcopy(board)
+    for i in test_board.board_dict:
+        stack = test_board.__getitem__(i)
+        if (stack.colour == 'W') | (stack.colour == 'w'):
+            stack.boom()
+    print(test_board.__str__())
+
+    # check every list for the emptyness after booming
+    for lst in explode_combinations:
+        for order in range(len(lst)):
+
+            # put the white stack I want it to boom
+            for item in lst[order]:
+                test_stack = Stack(item[0],item[1],'W',1)
+                test_board.boom_without_print(test_stack)
+
+            if test_board.is_empty():
+                print(lst[order])
+                return lst[order]
 
 
 # function: get the frequency list with descending sequence
@@ -62,6 +106,7 @@ def get_exploded_black_coordinator(coordinator, black_list):
 
 # function: test the repetitive points that explode same set of black token, only keep first one
 def get_useful_exploded_coordinator(frequenct_list, black_list, white_list):
+    # print("white_list: ", white_list)
     total_exploded_list = []
     for coordinator in frequenct_list:
         exploded_list = get_exploded_black_coordinator(coordinator, black_list)
@@ -78,6 +123,7 @@ def get_useful_exploded_coordinator(frequenct_list, black_list, white_list):
     useful_exploded_coordinator_list = []
     for white_item in total_exploded_list:
         useful_exploded_coordinator_list.append(white_item[0])
+    # print("len(white_list): ", len(white_list))
     return useful_exploded_coordinator_list[0:len(white_list)]
 
 
@@ -129,9 +175,9 @@ def get_board_string_list(chess_board):
                     stack = chess_board[surrounding_coords]
                     if stack.is_empty():
                         value_list.append(str(list(stack.get_coords())))
-                    graph[str(list(stack.get_coords()))] = value_list
                 except KeyError:
                     continue
+            graph[str(str([x,y]))] = value_list
     return graph
 
 
@@ -172,7 +218,10 @@ def find_all_paths(useful_exploded_list, white_list, graph):
         white_point = white_list[order]
         destination_point = useful_exploded_list[order]
         start_point = str([white_point[1], white_point[2]])
+        # print("start_point: ",start_point)
         end_point = str([destination_point[0], destination_point[1]])
+        # print("end_point: ", end_point)
         path = find_path(graph, start_point, end_point)
+        # print("path: ",path)
         path_dict[str(start_point)] = path
     return path_dict
