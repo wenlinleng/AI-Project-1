@@ -6,8 +6,8 @@ class Stack:
     def __init__(self, x: int, y: int, colour: str = None, height: int = 0):
         self.x, self.y = x, y
 
-        if height > 0 and not colour:
-            raise Exception('Stack must have a colour if having a height')
+        if height > 0:
+            assert colour
 
         if colour and colour.lower() in ['w', 'b']:
             self.colour = {'w': 'white', 'b': 'black'}[colour.lower()]
@@ -21,6 +21,15 @@ class Stack:
         if self.height > 0:
             return '{:>02d}{}'.format(self.height, self.colour[0].upper())
         return ''
+
+    def boom(self):
+        """
+        reset values for boom action.
+        does not actually affect close by tiles, see Board.boom()
+        :return:
+        """
+        self.height = 0
+        self.colour = None
 
     def reset(self):
         """
@@ -42,8 +51,8 @@ class Stack:
             integer distance to other_stack
         """
 
-        if not self.is_inline_to(other_stack):
-            raise Exception('other_stack must be inline with stack')
+        # if not self.is_inline_to(other_stack):
+        #     raise Exception('other_stack must be inline with stack')
 
         d = sqrt((self.x - other_stack.x)**2 + (self.y - other_stack.y)**2)
         return int(d)

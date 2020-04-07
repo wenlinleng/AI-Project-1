@@ -80,7 +80,8 @@ class Board:
             )
 
         # distance moving cannot be greater than height of moving stack
-        d = stack.get_distance_to(moving_stack)
+        # TODO: change the moving_stack to stack
+        d = stack.get_distance_to(stack)
         if d > moving_stack.height:
             raise InvalidMove(
                 'Stack is moving more tiles ({}) than tokens ({}) being moved'
@@ -120,13 +121,8 @@ class Board:
             True if the action should be printed
         :return:
         """
-        stack.reset()
+        stack.boom()
         if print_action:
-            """
-            To output a boom action, print a line in the format 
-            ‘BOOM at (x, y).’ where (x, y) are the coordinates of the stack 
-            initiating the explosion.
-            """
             print('BOOM at {}.'.format(stack.get_coords()))
 
         for x in range(stack.x - 1, stack.x + 2):
@@ -137,14 +133,7 @@ class Board:
                     # outside of board range, ignore
                     continue
                 if not current_stack.is_empty():
-                    self.boom(current_stack)
-
-    def is_empty(self) -> bool:
-        """
-        Checks if there are no pieces left on the board
-        :return: True if the board is empty
-        """
-        return all([i.height == 0 for i in self.board_dict.values()])
+                    self.boom(current_stack, print_action)
 
     def clear_white_tokens(self):
         """
@@ -152,8 +141,16 @@ class Board:
         :return:
         """
         for stack in self.board_dict.values():
-            if stack.colour[0] == 'w':
-                stack.reset()
+            if stack.colour:
+                if stack.colour[0] == 'w':
+                    stack.reset()
+
+    def is_empty(self) -> bool:
+        """
+        Checks if there are no pieces left on the board
+        :return: True if the board is empty
+        """
+        return all([i.height == 0 for i in self.board_dict.values()])
 
     @staticmethod
     def load_board_dict(data: dict) -> dict:
