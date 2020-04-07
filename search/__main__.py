@@ -68,8 +68,8 @@ def main():
                 if index == len(move_list) - 2:
                     x = int(move_list[index + 1][1])
                     y = int(move_list[index + 1][4])
-                    stack_boom = Stack(x, y, 'w', 1)
-                    print("BOOM at (", x, ",", y, ")")
+                    stack_boom = board[(x, y)]
+                    print('BOOM at {}.'.format(stack_boom.get_coords()))
                     board.boom(stack_boom, print_action=False)
 
     print(board)
