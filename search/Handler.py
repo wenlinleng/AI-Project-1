@@ -58,7 +58,7 @@ def get_boom_points(total_explode_list, white_list, board: Board):
     for i in test_board.board_dict:
         stack = test_board.__getitem__(i)
         if (stack.colour == 'W') | (stack.colour == 'w'):
-            stack.boom()
+            stack._boom()
     print(test_board.__str__())
 
     # check every list for the emptyness after booming
@@ -68,11 +68,11 @@ def get_boom_points(total_explode_list, white_list, board: Board):
             # put the white stack I want it to boom
             for item in lst[order]:
                 test_stack = Stack(item[0],item[1],'W',1)
-                test_board.boom_without_print(test_stack)
+                test_board.boom(test_stack, print_action=False)
 
-            if test_board.is_empty():
-                print(lst[order])
-                return lst[order]
+            # if test_board.is_empty():
+            #     print(lst[order])
+            #     return lst[order]
 
 
 # function: get the frequency list with descending sequence

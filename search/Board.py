@@ -9,8 +9,6 @@ class Board:
         self.board_dict = self.load_board_dict(data)
 
     def __str__(self):
-        # TODO: could u check your print board function to see it right or not? I think it mix up the three number [n, x, y]
-        #  in the form of input file, although I'm not sure.
         return util.print_board(self.board_dict, unicode=True, compact=False,
                                 return_as_string=True)
 
@@ -22,6 +20,22 @@ class Board:
 
     def move(self, stack: Stack, moving_stack: Stack):
         """
+        A move action (a ‘move’) involves moving some or all of the tokens in
+        a stack some number of squares in one of the four cardinal directions
+        — up, down, left, or right. From a stack of n tokens (n ≥ 1), the
+        player may move up to n of those tokens a distance of up to n squares
+        in a single direction. The tokens may not move diagonally, and must
+        move by at least one square. The destination square may be unoccupied,
+        or it may already be occupied by tokens of the same colour — in this
+        case, the moved tokens join the tokens on the destination square,
+        forming a new stack whose number of tokens is equal to the number of
+        tokens originally on the square plus the number of tokens moved onto
+        the square. The tokens may not move onto a square occupied by the
+        opponent’s tokens. However, the tokens may move ‘over’ it (as long as
+        the total distance moved is not more than n squares). A token cannot
+        move off the board. There is no limit to the number of tokens in a
+        stack.
+
         :param stack:
             the stack the tokens are being taken and moved from
         :param moving_stack:
@@ -64,9 +78,26 @@ class Board:
 
         print('MOVE {} from {} to {}.'.format(moving_stack.height, stack.get_coords(), moving_stack.get_coords()))
 
-    def boom(self, stack: Stack):
-        stack.boom()
-        print('BOOM at {}.'.format(stack.get_coords()))
+    def boom(self, stack: Stack, print_action=True):
+        """
+        A boom action (a ‘boom’) involves choosing a stack to explode. All of
+        the tokens in this stack are removed from play as a result of this
+        explosion. Additionally, the explosion immediately causes any stacks
+        (of either color) in a 3 × 3 area surrounding this stack to also
+        explode. These explosions may go on to trigger further explosions in
+        a recursive chain reaction. In this way, long chains of stacks may be
+        removed from play as the result of a single action.
+
+        :param stack:
+            stack being 'boom'ed
+        :param print_action:
+            True if the action should be printed
+        :return:
+        """
+        stack._boom()
+        if print_action:
+            print('BOOM at {}.'.format(stack.get_coords()))
+
         for x in range(stack.x - 1, stack.x + 2):
             for y in range(stack.y - 1, stack.y + 2):
                 try:
@@ -76,39 +107,6 @@ class Board:
                     continue
                 if not current_stack.is_empty():
                     self.boom(current_stack)
-
-    def boom_without_print(self, stack: Stack):
-        # TODO: I add this function which is almost the same with the above one, and it is used in the
-        #  get_boom_points(total_explode_list, white_list, board: Board) function in Handler file.
-        stack.boom()
-        for x in range(stack.x - 1, stack.x + 2):
-            for y in range(stack.y - 1, stack.y + 2):
-                try:
-                    current_stack = self[(x, y)]
-                except KeyError:
-                    # outside of board range, ignore
-                    continue
-                if not current_stack.is_empty():
-                    self.boom(current_stack)
-
-    # check board is empty or not
-    # def __getitem__(self, item) -> Stack:
-    #     return self.board_dict[item]
-    def is_empty(self):
-        # TODO: could u check if this function is right? I debug for a long time and not sure if wrong things happened there.
-        n = 0
-        for i in self.board_dict:
-            stack = self.__getitem__(i)
-            # print("Stack: ",stack)
-            if stack.height == 0:
-                n += 1;
-                # print("n: ",n)
-                continue
-            else:
-                break
-        if n == len(self.board_dict):
-            return True
-        return False
 
     @staticmethod
     def load_board_dict(data: dict) -> dict:
@@ -130,7 +128,7 @@ class Board:
         # filling the starting board
         for colour in ['white', 'black']:
             for stack in data[colour]:
-                x, y, n = stack
+                n, x, y = stack
                 board_dict[(x, y)] = Stack(x, y, colour, n)
 
         return board_dict

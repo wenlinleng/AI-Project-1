@@ -1,5 +1,6 @@
 import sys
 import json
+import os
 
 from search.Board import Board
 from search.Stack import Stack
@@ -34,7 +35,7 @@ def main():
     # get the all the points that make black token to explode
     total_explode_list = handler.get_all_explode_coordinators(black_list)
 
-    print("total_explode_list: ",total_explode_list)
+    print("total_explode_list: ", total_explode_list)
 
     handler.get_boom_points(total_explode_list, white_list, board)
 
@@ -65,9 +66,9 @@ def main():
     if len(token_divided_path) != 0:
         for item in token_divided_path:
             # TODO board.move()
-            stack_from = Stack(item[0][1],item[0][2],'w', item[1])
-            stack_to = Stack(item[2], item[3],'w')
-            board.move(board, stack_from, stack_to)
+            stack_from = Stack(item[0][1], item[0][2], 'w', item[1])
+            stack_to = Stack(item[2], item[3], 'w')
+            board.move(stack_from, stack_to)
             # print("MOVE ", item[1], "from ", (item[0][1], item[0][2]), "to ", (item[2], item[3]))
 
     # print the information of different path of the white token
@@ -75,15 +76,15 @@ def main():
         move_list = path_dict[white_chess]
         for index in range(len(move_list) - 1):
             stack_from = Stack(int(move_list[index][1]), int(move_list[index][4]), 'w', 1, )
-            stack_to = Stack(int(move_list[index+1][1]), int(move_list[index+1][4]),'w', 1)
-            board.move(stack_from,stack_to)
+            stack_to = Stack(int(move_list[index + 1][1]), int(move_list[index + 1][4]), 'w', 1)
+            board.move(stack_from, stack_to)
             # TODO board.move()
             if index == len(move_list) - 2:
                 # TODO baord.boom()
                 x = int(move_list[index + 1][1])
                 y = int(move_list[index + 1][4])
-                stack_boom = Stack(x, y, 'w',1)
-                print("stack_boom.get_coords(): ",stack_boom.get_coords())
+                stack_boom = Stack(x, y, 'w', 1)
+                print("stack_boom.get_coords(): ", stack_boom.get_coords())
                 board.boom(stack_boom)
 
     print('END')
@@ -98,18 +99,12 @@ def temp1():
     print(board)
 
     stack_to_move = board[(1, 4)]
-    moving_stack = Stack(1, 2, 'black', 3)
-
-    board.move(stack_to_move, moving_stack)
-    print(board)
-
-    moving_stack = Stack(1, 2, 'black', 3)
-
+    moving_stack = Stack(1, 3, 'w', 1)
     board.move(stack_to_move, moving_stack)
 
     print(board)
 
-    stack_to_boom = board[(1, 2)]
+    stack_to_boom = board[(1, 3)]
     board.boom(stack_to_boom)
 
     print(board)
@@ -127,8 +122,9 @@ def temp2():
 
 
 if __name__ == '__main__':
+    os.chdir('..')
     sys.argv = [
         '',
-        'C:/Users/Fraser/PycharmProjects/Uni/AI/AI-Project-1/test/test_cases/test-level-4.json'
+        'test/test_cases/test-level-1.json'
     ]
     temp1()
