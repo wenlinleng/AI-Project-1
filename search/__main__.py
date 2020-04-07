@@ -33,7 +33,7 @@ def main():
     total_explode_list = []
 
     # get the all the points that make black token to explode
-    total_explode_list = handler.get_all_explode_coordinators(black_list)
+    total_explode_list = handler.get_all_explode_coordinates(black_list)
 
     print("total_explode_list: ", total_explode_list)
 
@@ -45,7 +45,7 @@ def main():
     print("frequency_list: ", frequency_list)
 
     # exclude repetitive points that explode same set of black token
-    useful_exploded_coordinator_list = handler.get_useful_exploded_coordinator(frequency_list, black_list, white_list)
+    useful_exploded_coordinator_list = handler.get_useful_exploded_coordinate(frequency_list, black_list, white_list)
 
     # ---------------------- find path ----------------------------
 

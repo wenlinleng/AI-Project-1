@@ -1,7 +1,19 @@
-from search.Board import Board
-from search.Stack import Stack
 import itertools
 import copy
+
+from search.Board import Board
+from search.Stack import Stack
+
+
+class Coordinate:
+    # TODO replace all "coordinates" with this object. Lists are confusing
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return str([self.x, self.y])
+
 
 # function: print board
 def print_board(board):
@@ -11,31 +23,32 @@ def print_board(board):
             print(board[i][j], end='')
 
 
-# function: input a coordinator with format [x, y], return the explode coordinator around it.
-def get_explode_coordinators(coordinator):
-    explode_coordinators = []
+# function: input a coordinate with format [x, y], return the explode coordinate around it.
+def get_explode_coordinate(coordinate):
+    explode_coordinates = []
     for i in range(1, 4):
-        x = coordinator[0] - 1  # 0
-        y = coordinator[1] - 1 + i - 1  # 0
+        x = coordinate[0] - 1  # 0
+        y = coordinate[1] - 1 + i - 1  # 0
         for j in range(3):  # 1,2,3
             if (x >= 0 & y <= 7):
-                explode_coordinator = [x, y]
-                if (coordinator != explode_coordinator):
-                    explode_coordinators.append(explode_coordinator)
+                explode_coordinate = [x, y]
+                if (coordinate != explode_coordinate):
+                    explode_coordinates.append(explode_coordinate)
             x += 1
-    return explode_coordinators
+    return explode_coordinates
 
 
 # function: find the coordinators of the explode points by processing the black list
-def get_all_explode_coordinators(black_list):
+def get_all_explode_coordinates(black_list):
     total_explode_list = []
     for i in black_list:
-        coordinator = [i[1], i[2]]
-        explode_coordinators = get_explode_coordinators(coordinator)
+        coordinate = [i[1], i[2]]
+        explode_coordinators = get_explode_coordinate(coordinate)
         # print("explode_coordinators: ", explode_coordinators)
         for j in explode_coordinators:
             total_explode_list.append(j)
     return total_explode_list
+
 
 # loop total_explode_list[0:len(white_list)]：for 'only one point boom', for 'only two chesses boom' ...... return the
 # first list that make board to empty
@@ -45,7 +58,8 @@ def get_boom_points(total_explode_list, white_list, board: Board):
     #  which will work usually, but there is something wrong and I'm not sure whether it is about the is_empty() function
     #  in Board class or sth wrong with the function, if you have time, could u have a look?
 
-    print(board.__str__())
+    # print(board.__str__())
+    print(board)  # print implicitly calls obj.__str__() like obj.toString() in Java
 
     # create the list of variable length array
     explode_combinations = []
@@ -56,10 +70,12 @@ def get_boom_points(total_explode_list, white_list, board: Board):
     # wipe out white chess
     test_board = copy.deepcopy(board)
     for i in test_board.board_dict:
-        stack = test_board.__getitem__(i)
+        # stack = test_board.__getitem__(i)
+        stack = test_board[i]  # obj[i] implicitly call ogj.__getitem__(i)
         if (stack.colour == 'W') | (stack.colour == 'w'):
             stack.boom()
-    print(test_board.__str__())
+    # print(board.__str__())
+    print(board)  # print implicitly calls obj.__str__() like obj.toString() in Java
 
     # check every list for the emptyness after booming
     for lst in explode_combinations:
@@ -80,8 +96,8 @@ def get_frequency_list(total_explode_list):
     frequency_list = []
     for item in total_explode_list:
         count = 0
-        for coordinator in total_explode_list:
-            if coordinator == item:
+        for coordinate in total_explode_list:
+            if coordinate == item:
                 count += 1
         frequency_list.append([item[0], item[1], count])
     frequency_list = list(set([tuple(t) for t in frequency_list]))
@@ -90,9 +106,9 @@ def get_frequency_list(total_explode_list):
 
 
 # function: find the explode black token of given coordinate
-def get_exploded_black_coordinator(coordinator, black_list):
-    coordinator_x = coordinator[0]
-    coordinator_y = coordinator[1]
+def get_exploded_black_coordinate(coordinate, black_list):
+    coordinator_x = coordinate[0]
+    coordinator_y = coordinate[1]
     exploded_list = []
     number = 0
     for item in black_list:
@@ -105,11 +121,11 @@ def get_exploded_black_coordinator(coordinator, black_list):
 
 
 # function: test the repetitive points that explode same set of black token, only keep first one
-def get_useful_exploded_coordinator(frequenct_list, black_list, white_list):
+def get_useful_exploded_coordinate(frequenct_list, black_list, white_list):
     # print("white_list: ", white_list)
     total_exploded_list = []
     for coordinator in frequenct_list:
-        exploded_list = get_exploded_black_coordinator(coordinator, black_list)
+        exploded_list = get_exploded_black_coordinate(coordinator, black_list)
         total_exploded_list.append([coordinator, exploded_list])
     previous_item = total_exploded_list[0]
     total_exploded_list_without_1st = total_exploded_list[1:len(total_exploded_list)]
@@ -181,7 +197,7 @@ def get_board_string_list(chess_board):
     return graph
 
 
-# function: input a white chess coordinator, find the path to the destination point
+# function: input a white chess coordinate, find the path to the destination point
 def find_path(graph, start, end, path=[]):
     path = path + [start]
     if start == end:
