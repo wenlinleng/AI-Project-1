@@ -53,6 +53,7 @@ def main():
         for item in token_divided_path:
             stack_from = Stack(item[0][1], item[0][2], 'w', item[1])
             stack_to = Stack(item[2], item[3], 'w')
+            print("MOVE 1 from", stack_from.get_coords(), "to", stack_to.get_coords())
 
     # print the information of different path of the white token
     for white_chess in path_dict.keys():
