@@ -2,7 +2,8 @@
 
 # import file containing helper function and standard libs
 import handler
-import sys, json
+import sys
+import json
 
 # ------------------- data preparing ----------------------
 # Fraser: remove
