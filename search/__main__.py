@@ -16,7 +16,7 @@ def main():
 
     board = Board(data)
 
-    print(board)
+    # print(board)
 
     # create white and black token list
     white_list = data['white']
@@ -72,45 +72,9 @@ def main():
                     print('BOOM at {}.'.format(stack_boom.get_coords()))
                     board.boom(stack_boom, print_action=False)
 
-    print(board)
-    print('END')
-
-
-def temp1():
-    with open(sys.argv[1]) as file:
-        data = json.load(file)
-
-    board = Board(data)
-
-    print(board)
-
-    stack_to_move = board[(1, 4)]
-    moving_stack = Stack(1, 3, 'w', 1)
-    board.move(stack_to_move, moving_stack)
-
-    print(board)
-
-    stack_to_boom = board[(1, 3)]
-    board.boom(stack_to_boom)
-
-    print(board)
-
-
-def temp2():
-    with open(sys.argv[1]) as file:
-        data = json.load(file)
-
-    board = Board(data)
-
-    from search.util import print_board
-
-    print_board(board.board_dict)
+    # print(board)
+    # print('END')
 
 
 if __name__ == '__main__':
-    os.chdir('..')
-    sys.argv = [
-        '',
-        'test/test_cases/test-level-1.json'
-    ]
-    temp1()
+    main()
