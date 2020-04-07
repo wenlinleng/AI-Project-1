@@ -6,8 +6,8 @@ class Stack:
     def __init__(self, x: int, y: int, colour: str = None, height: int = 0):
         self.x, self.y = x, y
 
-        if height > 0:
-            assert colour
+        if height > 0 and not colour:
+            raise Exception('Stack must have a colour if having a height')
 
         if colour and colour.lower() in ['w', 'b']:
             self.colour = {'w': 'white', 'b': 'black'}[colour.lower()]
@@ -22,7 +22,7 @@ class Stack:
             return '{:>02d}{}'.format(self.height, self.colour[0].upper())
         return ''
 
-    def boom(self):
+    def reset(self):
         """
         reset values for boom action.
         does not actually affect close by tiles, see Board.boom()

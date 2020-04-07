@@ -6,7 +6,7 @@ def print_board(board):
             print(board[i][j], end='')
 
 
-# function: input a coordinator with format [x, y], return the explode coordinator around it.
+# function: input a coordinate with format [x, y], return the explode coordinate around it.
 def get_explode_coordinators(coordinator):
     explode_coordinators = []
     for i in range(1, 4):
@@ -20,7 +20,7 @@ def get_explode_coordinators(coordinator):
     return explode_coordinators
 
 
-# function: find the coordinator of the explode point by processing the black list
+# function: find the coordinate of the explode point by processing the black list
 def get_all_explode_coordinators(black_list):
     total_explode_list = []
     for i in black_list:
@@ -130,7 +130,7 @@ def get_board_string_list(chess_board):
     return graph
 
 
-# function: input a white chess coordinator, find the path to the destination point
+# function: input a white chess coordinate, find the path to the destination point
 def find_path(graph, start, end, path=[]):
     path = path + [start]
     if start == end:

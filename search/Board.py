@@ -120,8 +120,13 @@ class Board:
             True if the action should be printed
         :return:
         """
-        stack.boom()
+        stack.reset()
         if print_action:
+            """
+            To output a boom action, print a line in the format 
+            ‘BOOM at (x, y).’ where (x, y) are the coordinates of the stack 
+            initiating the explosion.
+            """
             print('BOOM at {}.'.format(stack.get_coords()))
 
         for x in range(stack.x - 1, stack.x + 2):
@@ -133,6 +138,22 @@ class Board:
                     continue
                 if not current_stack.is_empty():
                     self.boom(current_stack)
+
+    def is_empty(self) -> bool:
+        """
+        Checks if there are no pieces left on the board
+        :return: True if the board is empty
+        """
+        return all([i.height == 0 for i in self.board_dict.values()])
+
+    def clear_white_tokens(self):
+        """
+        clears all white pieces from the board
+        :return:
+        """
+        for stack in self.board_dict.values():
+            if stack.colour[0] == 'w':
+                stack.reset()
 
     @staticmethod
     def load_board_dict(data: dict) -> dict:
