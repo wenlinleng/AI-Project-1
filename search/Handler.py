@@ -73,7 +73,7 @@ def get_boom_points(total_explode_list, white_list, board: Board):
         # stack = test_board.__getitem__(i)
         stack = test_board[i]  # obj[i] implicitly call ogj.__getitem__(i)
         if (stack.colour == 'W') | (stack.colour == 'w'):
-            stack.boom()
+            stack.reset()
     # print(board.__str__())
     print(board)  # print implicitly calls obj.__str__() like obj.toString() in Java
 
