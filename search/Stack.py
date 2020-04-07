@@ -22,14 +22,8 @@ class Stack:
             return '{:>02d}{}'.format(self.height, self.colour[0].upper())
         return ''
 
-    def boom(self):
-        """
-        reset values for boom action.
-        does not actually affect close by tiles, see Board.boom()
-        :return:
-        """
-        self.height = 0
-        self.colour = None
+    def __repr__(self):
+        return self.__str__()
 
     def reset(self):
         """

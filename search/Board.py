@@ -13,12 +13,12 @@ class Board:
                                 return_as_string=True)
 
     def __repr__(self):
-        return super().__repr__() + '\n' + self.__str__()
+        return super().__repr__()
 
     def __getitem__(self, item) -> Stack:
         return self.board_dict[item]
 
-    def move(self, stack: Stack, moving_stack: Stack):
+    def move(self, stack: Stack, moving_stack: Stack, print_action=True):
         """
         A move action (a ‘move’) involves moving some or all of the tokens in
         a stack some number of squares in one of the four cardinal directions
@@ -42,6 +42,8 @@ class Board:
             the portion of the stack that is being moved, represented as a
             separate stack, is agnostic as to what currently occupies the
             destination.
+        :param print_action:
+            True if the action should be printed
         :return:
         """
 
@@ -101,9 +103,10 @@ class Board:
         want to output the action of moving a whole stack, n would just be 
         equal to the number of tokens in the stack.
         """
-        print('MOVE {} from {} to {}.'.format(
-            moving_stack.height, stack.get_coords(), moving_stack.get_coords()
-        ))
+        if print_action:
+            print('MOVE {} from {} to {}.'.format(
+                moving_stack.height, stack.get_coords(), moving_stack.get_coords()
+            ))
 
     def boom(self, stack: Stack, print_action=True):
         """
@@ -121,7 +124,7 @@ class Board:
             True if the action should be printed
         :return:
         """
-        stack.boom()
+        stack.reset()
         if print_action:
             print('BOOM at {}.'.format(stack.get_coords()))
 

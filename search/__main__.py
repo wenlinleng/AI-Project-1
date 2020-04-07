@@ -16,6 +16,8 @@ def main():
 
     board = Board(data)
 
+    print(board)
+
     # create white and black token list
     white_list = data['white']
     black_list = data['black']
@@ -36,7 +38,7 @@ def main():
     # get the deep copy of board and as input of get_boom_points
     board_copy = copy.deepcopy(board)
 
-    useful_exploded_coordinator_list = handler.get_boom_points(total_explode_list, white_list, board_copy)
+    useful_exploded_coordinates_list = handler.get_boom_points(total_explode_list, white_list, board_copy)
 
     # ---------------------- find path ----------------------------
 
@@ -44,34 +46,35 @@ def main():
     graph = handler.get_board_string_list(board)
 
     # get the path for all white tokens
-    path_dict = handler.find_all_paths(useful_exploded_coordinator_list, white_list, graph)
+    path_dict = handler.find_all_paths(useful_exploded_coordinates_list, white_list, graph)
 
     # ---------------------- print paths ----------------------------
 
     # print the information about divided token
     if len(token_divided_path) != 0:
         for item in token_divided_path:
-            stack_from = Stack(item[0][1], item[0][2], 'w', item[1])
-            stack_to = Stack(item[2], item[3], 'w')
+            stack_from = board[(item[0][1], item[0][2])]
+            moving_stack = Stack(item[2], item[3], 'w', 1)
+            board.move(stack_from, moving_stack, print_action=True)
 
     # print the information of different path of the white token
-    for white_chess in path_dict.keys():
-        move_list = path_dict[white_chess]
+    for white_chess, move_list in path_dict.items():
         if move_list:
             for index in range(len(move_list) - 1):
-                stack_from = Stack(int(move_list[index][1]), int(move_list[index][4]), 'w', 1, )
-                stack_to = Stack(int(move_list[index + 1][1]), int(move_list[index + 1][4]), 'w', 1)
-                board.move(stack_from, stack_to)
-                # TODO board.move()
+                stack_from = board[(int(move_list[index][1]), int(move_list[index][4]))]
+                moving_stack = Stack(int(move_list[index + 1][1]), int(move_list[index + 1][4]), 'w', 1)
+                board.move(stack_from, moving_stack, print_action=True)
+
                 if index == len(move_list) - 2:
-                    # TODO baord.boom()
                     x = int(move_list[index + 1][1])
                     y = int(move_list[index + 1][4])
                     stack_boom = Stack(x, y, 'w', 1)
-                    print("BOOM at (", x ,",", y,")")
-                    # board.boom(stack_boom)
+                    print("BOOM at (", x, ",", y, ")")
+                    board.boom(stack_boom, print_action=False)
 
+    print(board)
     print('END')
+
 
 def temp1():
     with open(sys.argv[1]) as file:

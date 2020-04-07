@@ -14,6 +14,9 @@ class Coordinate:
     def __str__(self):
         return str([self.x, self.y])
 
+    def __repr__(self):
+        return self.__str__()
+
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
