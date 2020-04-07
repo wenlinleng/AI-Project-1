@@ -48,35 +48,61 @@ class Board:
         try:
             destination_stack = self[moving_stack.get_coords()]
         except KeyError:
-            raise InvalidMove('Location {} not on board'.format(moving_stack.get_coords()))
+            raise InvalidMove(
+                'Location {} not on board'.format(moving_stack.get_coords())
+            )
 
         # check moving_stack is same colour
         if stack.colour != moving_stack.colour:
-            raise InvalidMove('Colours do not match, check the moving stack shares colour with stack')
+            raise InvalidMove(
+                'Colours do not match, check the moving stack shares colour with stack'
+            )
 
         # check new location is same colour or empty
         if not stack.is_colour_empty(destination_stack):
-            raise InvalidMove('{} is currently occupied by the other colour ({})'.format(moving_stack.get_coords(), destination_stack.colour))
+            raise InvalidMove(
+                '{} is currently occupied by the other colour ({})'
+                .format(moving_stack.get_coords(), destination_stack.colour)
+            )
 
         # check moving stack is not higher than original
         if moving_stack.height > stack.height:
-            raise InvalidMove('Number of tiles being moved ({}) is greater than the stack\'s height ({})'.format(moving_stack.height, stack.height))
+            raise InvalidMove(
+                'Number of tiles being moved ({}) is greater than the stack\'s height ({})'
+                .format(moving_stack.height, stack.height)
+            )
 
         # check new location is straight line from stack
         if not stack.is_inline_to(moving_stack):
-            raise InvalidMove('{} -> {} is not straight line'.format(stack.get_coords(), moving_stack.get_coords()))
+            raise InvalidMove(
+                '{} -> {} is not straight line'
+                .format(stack.get_coords(), moving_stack.get_coords())
+            )
 
         # distance moving cannot be greater than height of moving stack
         d = stack.get_distance_to(moving_stack)
         if d > moving_stack.height:
-            raise InvalidMove('Stack is moving more tiles ({}) than tokens ({}) being moved'.format(d, moving_stack.height))
+            raise InvalidMove(
+                'Stack is moving more tiles ({}) than tokens ({}) being moved'
+                .format(d, moving_stack.height)
+            )
 
         # moving the tokens
         stack.change_height(-moving_stack.height)
         destination_stack.colour = moving_stack.colour
         destination_stack.change_height(moving_stack.height)
 
-        print('MOVE {} from {} to {}.'.format(moving_stack.height, stack.get_coords(), moving_stack.get_coords()))
+        """
+        To output a move action, print a line in the format ‘MOVE n from 
+        (xa, ya) to (xb, yb).’ where n is the number of tokens in the stack to 
+        move, (xa, ya) are the coordinates of the moving tokens before the 
+        move, and (xb, yb) are the coordinates after the move. Note: If you 
+        want to output the action of moving a whole stack, n would just be 
+        equal to the number of tokens in the stack.
+        """
+        print('MOVE {} from {} to {}.'.format(
+            moving_stack.height, stack.get_coords(), moving_stack.get_coords()
+        ))
 
     def boom(self, stack: Stack, print_action=True):
         """
@@ -94,7 +120,7 @@ class Board:
             True if the action should be printed
         :return:
         """
-        stack._boom()
+        stack.boom()
         if print_action:
             print('BOOM at {}.'.format(stack.get_coords()))
 

@@ -58,7 +58,7 @@ def get_boom_points(total_explode_list, white_list, board: Board):
     for i in test_board.board_dict:
         stack = test_board.__getitem__(i)
         if (stack.colour == 'W') | (stack.colour == 'w'):
-            stack._boom()
+            stack.boom()
     print(test_board.__str__())
 
     # check every list for the emptyness after booming
