@@ -3,14 +3,6 @@ from search.Stack import Stack
 import itertools
 import copy
 
-# function: print board
-def print_board(board):
-    for i in range(8):
-        print('\n')
-        for j in range(8):
-            print(board[i][j], end='')
-
-
 # function: input a coordinator with format [x, y], return the explode coordinator around it.
 def get_explode_coordinators(coordinator):
     explode_coordinators = []
