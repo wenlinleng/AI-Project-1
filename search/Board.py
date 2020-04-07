@@ -134,6 +134,13 @@ class Board:
                 if not current_stack.is_empty():
                     self.boom(current_stack)
 
+    def is_empty(self) -> bool:
+        """
+        Checks if there are no pieces left on the board
+        :return: True if the board is empty
+        """
+        return all([i.height == 0 for i in self.board_dict.values()])
+
     @staticmethod
     def load_board_dict(data: dict) -> dict:
         """
